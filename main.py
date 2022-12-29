@@ -67,47 +67,45 @@ def print_slot_machine(columns):
         print()
 
 
-def deposit():
+def promt_user_for_digit(promt_message, condition_message, condition):
     while True:
-        amount = input("How much $ would you like to deposit?\n$")
+        digit = input(promt_message)
+        if not digit.isdigit():
+            print("Please enter a positive number.")
+            continue
 
-        if amount.isdigit():
-            amount = int(amount)
-            if amount > 0:
-                break
-            else:
-                print("Amont must be grater than 0.")
+        digit = int(digit)
+        if condition(digit):
+            break
         else:
-            print("Please enter a number.")
-    return amount
+            print(condition_message)
+        
+    return digit        
+
+
+def deposit():
+    deposit_condition = lambda x: x > 0
+    return promt_user_for_digit("How much $ would you like to deposit?\n$",
+    "Amount must be grater than 0.",
+    deposit_condition
+    )
 
 
 def get_number_of_lines():
-    while True:
-        lines = input(f"Enter the number of lines to bet on.\n(1-{MAX_LINES})")
-        if lines.isdigit():
-            lines = int(lines)
-            if 1 <= lines <= MAX_LINES:
-                break
-            else:
-                print("Please enter a valid number of lines.")
-        else:
-            print("Please enter a number.")
-    return lines
-
+    lines_condition = lambda x: 1<= x <= MAX_LINES
+    return promt_user_for_digit(f"Enter the number of lines to bet on.\n(1-{MAX_LINES})",
+    "Please enter a valid number of lines.",
+    lines_condition
+    )
+    
 
 def get_bet():
-    while True:
-        bet = input("How much $ would you like to bet on each line?\n$")
-        if bet.isdigit():
-            bet = int(bet)
-            if MIN_BET <= bet <= MAX_BET:
-                break
-            else:
-                print(f"Amont must be between ${MIN_BET} and ${MAX_BET}.")
-        else:
-            print("Please enter a number.")
-    return bet
+    bet_condition = lambda x: MIN_BET <= x <= MAX_BET
+    return promt_user_for_digit("How much $ would you like to bet on each line?\n$",
+    f"Amont must be between ${MIN_BET} and ${MAX_BET}.",
+    bet_condition
+    )
+    
 
 def spin(balance):
     lines = get_number_of_lines()
