@@ -83,7 +83,7 @@ def promt_user_for_digit(promt_message, condition_message, condition):
     return digit        
 
 
-def deposit():
+def get_deposit():
     deposit_condition = lambda x: x > 0
     return promt_user_for_digit("How much $ would you like to deposit?\n$",
     "Amount must be grater than 0.",
@@ -123,8 +123,8 @@ def spin(balance):
     slots = get_slot_machine_spin(ROWS, COLS, symbol_count)
     print_slot_machine(slots)
     winnings, winning_lines = check_winnings(slots, lines, bet, symbol_value)
-
     print(f"You won ${winnings}.")
+
     if winnings:
         print("You won on lines:", *winning_lines)
     
@@ -132,15 +132,17 @@ def spin(balance):
 
 
 def main():
-    balance = deposit()
+    balance = get_deposit()
     while True:
         print(f"Current balance is ${balance}")
-        answer = input("Press 'enter' to play, 'q' to quit.")
+        answer = input("Press any key to play, 'q' to quit.")
         if answer == "q":
             break
         balance += spin(balance)
+        if balance <= 0:
+            print("You run out of money...")
+            break
     print(f"You left with ${balance}")
-
 
 
 main()
